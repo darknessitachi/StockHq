@@ -21,14 +21,20 @@ namespace StockHq.WebUI.Controllers
             //删除老数据
             var executeNum = await new SqlConnection(DBSetting.StockHq).ExecuteAsync(@"DELETE FROM StockHq");
             //http://q.stock.sohu.com/hisHq?code=cn_002055&start=20160226&end=20160226&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp
-            var dict = new Dictionary<string, string>();
-            dict.Add("首旅酒店", "600258");
-            dict.Add("恒生电子", "600570");
-            dict.Add("得润电子", "002055");
-            dict.Add("世纪星源", "000005");
+            var dict = new Dictionary<string, string>()
+            {
+                { "首旅酒店", "600258"},
+                { "恒生电子", "600570"},
+                { "得润电子", "002055"},
+                { "世纪星源", "000005"},
+                { "积成电子", "002339"},
+                { "锦江投资", "600650"},
+                { "洛阳玻璃", "600876"},
+                { "得利斯", "002330"}
+            };
             foreach (var item in dict)
             {
-                string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start=20160101&end=20160226&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Value);
+                string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start=20160101&end=20160229&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Value);
                 var data = await url.GetStringAsync();
                 var stock = JsonConvert.DeserializeObject<List<Stock>>(data.Replace(@"historySearchHandler(", "").Replace(")", "").Replace("%", ""));
                 if (stock.Count() < 0 || stock[0].Status != 0)
