@@ -16,6 +16,10 @@ namespace StockHq.WebUI.Controllers
 {
     public class StockController : Controller
     {
+        /// <summary>
+        /// 获得历史交易数据
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             #region 查询所有股票
@@ -66,18 +70,20 @@ namespace StockHq.WebUI.Controllers
             }
             #endregion
 
-            //删除老数据
+            #region 删除老数据
             var executeNum = await new SqlConnection(DBSetting.StockHq).ExecuteAsync(@"DELETE FROM StockHq");
+            #endregion
 
+            #region 获得历史交易数据
             foreach (var item in stocks)
             {
-                //获得历史数据
                 string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start=20160101&end=20160229&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Code);
                 var data = await url.GetStringAsync();
                 var stock = JsonConvert.DeserializeObject<List<HisStockHq>>(data.Replace(@"historySearchHandler(", "").Replace(")", "").Replace("%", ""));
                 if (stock.Count() < 0 || stock[0].Status != 0)
                 {
-                    return Json(new { IsError = true, Msg = string.Empty, Data = string.Empty });
+                    continue;
+                    //return Json(new { IsError = true, Msg = string.Empty, Data = string.Empty });
                 }
                 for (int j = 0; j < stock[0].Hq.Count(); j++)
                 {
@@ -97,6 +103,8 @@ namespace StockHq.WebUI.Controllers
                     });
                 }
             }
+            #endregion
+
             return View();
         }
     }
