@@ -18,17 +18,13 @@ namespace StockHq.Entities
         [Key]
         public int Id { get; set; }
         /// <summary>
+        /// 外键
+        /// </summary>
+        public int StockId { get; set; }
+        /// <summary>
         /// 交易时间
         /// </summary>
         public string Date { get; set; }
-        /// <summary>
-        /// 股票编码
-        /// </summary>
-        public string Code { get; set; }
-        /// <summary>
-        /// 股票名
-        /// </summary>
-        public string Name { get; set; }
         /// <summary>
         /// 开盘价
         /// </summary>

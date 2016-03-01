@@ -18,36 +18,72 @@ namespace StockHq.WebUI.Controllers
     {
         public async Task<ActionResult> Index()
         {
+            #region 查询所有股票
+            var stocks = await new SqlConnection(DBSetting.StockHq).QueryAsync<Stocks>("SELECT *FROM Stocks").ContinueWith(t => t.Result.ToList());
+            if (stocks == null)
+            {
+                return Json(new { IsError = true, Msg = string.Empty, Data = string.Empty });
+            }
+            #endregion
+
+            #region  获取连续下跌天数
+            /*
+
+                            {
+                                "stkc": "600876",
+                                "stkn": "洛阳玻璃",
+                                "cp": "27.23",
+                                "pl": "-29.820051",
+                                "ta": "466893",
+                                "tr": "18.674227",
+                                "day": "3",
+                                "ps": "-8.12",
+                                "isup": "0",
+                                "qst": "2016-02-25",
+                                "jst": "2016-02-29"
+                            }
+            */
+            foreach (var item in stocks)
+            {
+                var lowHq = await string.Format(@"http://hqquery.jrj.com.cn/alxzd.do?sort=day&page=1&size=20&order=desc&isup=0&ids={0}&_dc=1456802790072", item.Code).GetStringAsync();
+                var lowHqArrs = lowHq.Remove(0, lowHq.IndexOf('[') + 5).Replace("]\r\n}", "").Replace("{", "").Replace("}", "").Replace(@"\", "").Split(',');
+                if (lowHqArrs.Count() < 10)
+                {
+                    continue;
+                }
+                await new SqlConnection(DBSetting.StockHq).ExecuteAsync("UPDATE Stocks SET lowdays= @lowdays ,lowchg=@lowchg ,lowclose=@lowclose,lowrate=@lowrate,lowvolume=@lowvolume,lowturnover=@lowturnover,lowbegin=@lowbegin,lowend=@lowend WHERE code=@code", new
+                {
+                    lowdays = decimal.Parse(lowHqArrs[6].Split(':')[1]),
+                    lowchg = decimal.Parse(lowHqArrs[3].Split(':')[1]),
+                    lowclose = decimal.Parse(lowHqArrs[2].Split(':')[1]),
+                    lowrate = decimal.Parse(lowHqArrs[5].Split(':')[1]),
+                    lowvolume = int.Parse(lowHqArrs[4].Split(':')[1]),
+                    lowturnover = decimal.Parse(lowHqArrs[7].Split(':')[1]),
+                    lowbegin = lowHqArrs[9].Split(':')[1],
+                    lowend = lowHqArrs[10].Split(':')[1],
+                    code = item.Code
+                });
+            }
+            #endregion
+
             //删除老数据
             var executeNum = await new SqlConnection(DBSetting.StockHq).ExecuteAsync(@"DELETE FROM StockHq");
-            //http://q.stock.sohu.com/hisHq?code=cn_002055&start=20160226&end=20160226&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp
-            var dict = new Dictionary<string, string>()
+
+            foreach (var item in stocks)
             {
-                { "首旅酒店", "600258"},
-                { "恒生电子", "600570"},
-                { "得润电子", "002055"},
-                { "世纪星源", "000005"},
-                { "积成电子", "002339"},
-                { "锦江投资", "600650"},
-                { "洛阳玻璃", "600876"},
-                { "得利斯", "002330"}
-            };
-            foreach (var item in dict)
-            {
-                string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start=20160101&end=20160229&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Value);
+                //获得历史数据
+                string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start=20160101&end=20160229&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Code);
                 var data = await url.GetStringAsync();
-                var stock = JsonConvert.DeserializeObject<List<Stock>>(data.Replace(@"historySearchHandler(", "").Replace(")", "").Replace("%", ""));
+                var stock = JsonConvert.DeserializeObject<List<HisStockHq>>(data.Replace(@"historySearchHandler(", "").Replace(")", "").Replace("%", ""));
                 if (stock.Count() < 0 || stock[0].Status != 0)
                 {
                     return Json(new { IsError = true, Msg = string.Empty, Data = string.Empty });
                 }
-
                 for (int j = 0; j < stock[0].Hq.Count(); j++)
                 {
                     await new SqlConnection(DBSetting.StockHq).InsertAsync(new StockHq.Entities.StockHq
                     {
-                        Code = item.Value,
-                        Name = item.Key,
+                        StockId = item.Id,
                         Date = stock[0].Hq[j][0].ToString(),
                         Open = decimal.Parse(stock[0].Hq[j][1]),
                         Close = decimal.Parse(stock[0].Hq[j][2]),
@@ -63,7 +99,5 @@ namespace StockHq.WebUI.Controllers
             }
             return View();
         }
-
-
     }
 }

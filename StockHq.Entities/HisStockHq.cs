@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StockHq.Entities
 {
-    public class Stock
+    public class HisStockHq
     {
         [JsonProperty("status")]
         public int Status;

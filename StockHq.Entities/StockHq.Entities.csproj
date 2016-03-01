@@ -53,8 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stock.cs" />
+    <Compile Include="HisStockHq.cs" />
     <Compile Include="StockHq.cs" />
+    <Compile Include="Stocks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
