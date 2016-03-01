@@ -52,6 +52,11 @@ namespace StockHq.WebUI.Controllers
             }
         }
 
+        /// <summary>
+        /// 日交易详情
+        /// </summary>
+        /// <param name="stockId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> GetStockHqDetailAsync(int stockId)
         {
