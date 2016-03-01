@@ -1,0 +1,152 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>股票数据分析</title>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Scripts/jtable/themes/lightcolor/blue/jtable.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-2.2.1.js"></script>
+    <script src="~/Scripts/jquery-ui-1.9.2.min.js"></script>
+    <script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+    <script src="~/Scripts/jtable/localization/jquery.jtable.zh-CN.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#container').jtable({
+                title: '股票数据分析',
+                paging: true,
+                pageSize: 20,
+                sorting: true,
+                defaultSorting: 'lowdays desc ,lowchg desc',
+                //openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
+                actions: {
+                    listAction: '/Hq/GetStockHqAsync',
+                    createAction: '/GettingStarted/CreatePerson',
+                    updateAction: '/GettingStarted/UpdatePerson',
+                    deleteAction: '/GettingStarted/DeletePerson'
+                },
+                fields: {
+                    Id: {
+                        title: '序号',
+                        key: true,
+                        create: false,
+                        edit: false,
+                        list: false,
+                        width: '3%'
+                    },
+                    Exams: {
+                        title: '',
+                        width: '5%',
+                        sorting: false,
+                        edit: false,
+                        create: false,
+                        display: function (data) {
+                            //Create an image that will be used to open child table
+                            var $img = $('<img src="/Content/images/more.png" title="日交易详情" />');
+                            //Open child table when user clicks the image
+                            $img.click(function () {
+                                $('#container').jtable('openChildTable',
+                                        $img.closest('tr'), //Parent row
+                                        {
+                                            title: data.record.Name + ' - 日交易详情',
+                                            actions: {
+                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id,
+                                                deleteAction: '/Demo/DeleteExam',
+                                                updateAction: '/Demo/UpdateExam',
+                                                createAction: '/Demo/CreateExam'
+                                            },
+                                            fields: {
+                                                Id: {
+                                                    title: '序号',
+                                                    key: true,
+                                                    create: false,
+                                                    edit: false,
+                                                    list: false
+                                                },
+                                                StockId: {
+                                                    type: 'hidden',
+                                                    defaultValue: data.record.Id
+                                                },
+                                                Date: {
+                                                    title: '交易时间',
+                                                },
+                                                Open: {
+                                                    title: '开盘价',
+                                                },
+                                                Highest: {
+                                                    title: '最高价',
+                                                },
+                                                Lowest: {
+                                                    title: '最低价',
+                                                },
+                                                Change: {
+                                                    title: '涨跌额',
+                                                },
+                                                Volume: {
+                                                    title: '成交量(手)',
+                                                },
+                                                Turnover: {
+                                                    title: '成交金额(万)',
+                                                },
+                                                Rate: {
+                                                    title: '换手率',
+                                                }
+                                            }
+                                        }, function (data) {
+                                            data.childTable.jtable('load');
+                                        });
+                            });
+                            //Return image to show on the person row
+                            return $img;
+                        }
+                    },
+                    Code: {
+                        title: '证券代码',
+                    },
+                    Name: {
+                        title: '证券简称',
+                    },
+                    Lowbegin: {
+                        title: '下跌开始时间',
+                    },
+                    Lowdays: {
+                        title: '下跌天数',
+                    },
+                    Lowchg: {
+                        title: '涨跌幅',
+                    },
+                    Lowclose: {
+                        title: '收盘价',
+                    },
+                    Lowrate: {
+                        title: '换手率',
+                    },
+                    Lowvolume: {
+                        title: '成交量',
+                    },
+                    Lowturnover: {
+                        title: '阶段涨跌额',
+                    }
+                    //    RecordDate: {
+                    //    title: 'Record date',
+                    //    width: '15%',
+                    //    type: 'date',
+                    //    displayFormat: 'dd.mm.yy',
+                    //    create: false,
+                    //    edit: false,
+                    //    sorting: false //This column is not sortable!
+                    //}
+                }
+            });
+            $('#container').jtable('load');
+        });
+    </script>
+</head>
+<body>
+    <div id="container">
+
+    </div>
+</body>
+</html>

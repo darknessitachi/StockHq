@@ -160,6 +160,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\more.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -386,11 +387,11 @@
     <Content Include="Scripts\jtable\themes\jtable_theme_base.less" />
     <Content Include="Scripts\jtable\themes\jqueryui\jtable_jqueryui.less" />
     <Content Include="Scripts\jtable\themes\basic\jtable_basic.less" />
+    <Content Include="Views\Hq\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Hq\" />
     <Folder Include="Views\Stock\" />
   </ItemGroup>
   <ItemGroup>
