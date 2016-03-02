@@ -77,8 +77,12 @@ namespace StockHq.WebUI.Controllers
             #region 获得历史交易数据
             foreach (var item in stocks)
             {
-                string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start=20160101&end=20160229&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Code);
+                string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start={1}&end={2}&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Code, DateTime.Now.AddDays(-30).ToString("yyyyMMdd"), DateTime.Now.ToString("yyyyMMdd"));
                 var data = await url.GetStringAsync();
+                if (data.Length < 30)
+                {
+                    continue;
+                }
                 var stock = JsonConvert.DeserializeObject<List<HisStockHq>>(data.Replace(@"historySearchHandler(", "").Replace(")", "").Replace("%", ""));
                 if (stock.Count() < 0 || stock[0].Status != 0)
                 {

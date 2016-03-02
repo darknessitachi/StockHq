@@ -28,17 +28,26 @@ namespace StockHq.WebUI.Controllers
         /// <param name="jtSorting"></param>
         /// <returns></returns>
 
-        public async Task<ActionResult> GetStockHqAsync(int jtStartIndex = 0, int jtPageSize = 20, string jtSorting = "lowdays desc ,lowchg desc")
+        public async Task<ActionResult> GetStockHqAsync(int jtStartIndex = 0, int jtPageSize = 20, string jtSorting = "lowend desc,lowdays desc ,lowchg desc")
         {
             try
             {
-                string cmdText = @"SELECT * FROM(SELECT ROW_NUMBER() OVER (ORDER BY @jtSorting) AS Num, * FROM Stocks) AS A
+                /*
+                   string cmdText = @"SELECT * FROM(SELECT ROW_NUMBER() OVER (ORDER BY @jtSorting) AS Num, * FROM Stocks) AS A
+                                     WHERE Num > @beginSize AND Num <= @endSize";
+                  var stocks = await new SqlConnection(DBSetting.StockHq).QueryAsync<Stocks>(cmdText, new
+                  {
+                      beginSize = jtStartIndex,
+                      endSize = jtStartIndex + jtPageSize,
+                      jtSorting = jtSorting
+                  }).ContinueWith(t => t.Result.ToList());
+                 */
+                string cmdText = @"SELECT * FROM(SELECT ROW_NUMBER() OVER (ORDER BY " + jtSorting + @") AS Num, * FROM Stocks) AS A
                                    WHERE Num > @beginSize AND Num <= @endSize";
                 var stocks = await new SqlConnection(DBSetting.StockHq).QueryAsync<Stocks>(cmdText, new
                 {
                     beginSize = jtStartIndex,
                     endSize = jtStartIndex + jtPageSize,
-                    jtSorting = jtSorting
                 }).ContinueWith(t => t.Result.ToList());
                 if (stocks == null)
                 {

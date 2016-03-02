@@ -19,7 +19,7 @@
                 paging: true,
                 pageSize: 20,
                 sorting: true,
-                defaultSorting: 'lowdays desc ,lowchg desc',
+                defaultSorting: 'lowend desc,lowdays desc ,lowchg desc',
                 //openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
                 actions: {
                     listAction: '/Hq/GetStockHqAsync',
@@ -34,23 +34,23 @@
                         create: false,
                         edit: false,
                         list: false,
-                        width: '3%'
+                        width: '2%'
                     },
                     Exams: {
                         title: '',
-                        width: '5%',
+                        width: '2%',
                         sorting: false,
                         edit: false,
                         create: false,
                         display: function (data) {
                             //Create an image that will be used to open child table
-                            var $img = $('<img src="/Content/images/more.png" title="日交易详情" />');
+                            var $img = $('<img src="/Content/images/more.png" title="日交易详情（最近10个交易日）" />');
                             //Open child table when user clicks the image
                             $img.click(function () {
                                 $('#container').jtable('openChildTable',
                                         $img.closest('tr'), //Parent row
                                         {
-                                            title: data.record.Name + ' - 日交易详情',
+                                            title: data.record.Name + ' - 日交易详情（最近10个交易日）',
                                             actions: {
                                                 listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id,
                                                 deleteAction: '/Demo/DeleteExam',
@@ -81,6 +81,9 @@
                                                 Lowest: {
                                                     title: '最低价',
                                                 },
+                                                Chg: {
+                                                    title: '涨跌幅',
+                                                },
                                                 Change: {
                                                     title: '涨跌额',
                                                 },
@@ -109,7 +112,10 @@
                         title: '证券简称',
                     },
                     Lowbegin: {
-                        title: '下跌开始时间',
+                        title: '下跌时间',
+                    },
+                    Lowend: {
+                        title: '止跌时间',
                     },
                     Lowdays: {
                         title: '下跌天数',
@@ -124,7 +130,7 @@
                         title: '换手率',
                     },
                     Lowvolume: {
-                        title: '成交量',
+                        title: '成交量(手)',
                     },
                     Lowturnover: {
                         title: '阶段涨跌额',
