@@ -112,13 +112,15 @@
                     Name: {
                         title: '证券简称',
                         display: function (data) {
-                            if (data.record.Lowchg == 0) {
-                                return '<b>' + data.record.Name + '</b>';
-                            }
-                            else if (data.record.Lowchg >= 0) {
+                            if (data.record.Lowchg > 0) {
                                 return '<b style="color:red">' + data.record.Name + '</b>';
-                            } else {
+                            }
+                            else if (data.record.Lowchg < 0 && data.record.Lowdays >= 3) {
+                                //连跌3天并且是最后一个交易日也收跌
                                 return '<b style="color:green">' + data.record.Name + '</b>';
+                            }
+                            else {
+                                return '<b>' + data.record.Name + '</b>';
                             }
                         }
                     },
