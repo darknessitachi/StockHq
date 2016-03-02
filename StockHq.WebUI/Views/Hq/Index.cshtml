@@ -17,7 +17,7 @@
             $('#container').jtable({
                 title: '股票数据分析',
                 paging: true,
-                pageSize: 20,
+                pageSize: 50,
                 sorting: true,
                 defaultSorting: 'lowend desc,lowdays desc ,lowchg desc',
                 //openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
@@ -112,10 +112,10 @@
                         title: '证券简称',
                     },
                     Lowbegin: {
-                        title: '下跌时间',
+                        title: '下跌日期',
                     },
                     Lowend: {
-                        title: '止跌时间',
+                        title: '止跌日期',
                     },
                     Lowdays: {
                         title: '下跌天数',

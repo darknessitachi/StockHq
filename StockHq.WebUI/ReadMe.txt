@@ -1,15 +1,15 @@
 ﻿未开发计划
 1.连续上涨天数
-2.按周统计
-3.所属板块
+2.红绿颜色
+3.按周统计
+4.所属板块
 
 
-
-INSERT INTO Stocks (CODE, NAME) VALUES ('得润电子', '002055')
-
+http://hangfire.io/
 
 http://www.jtable.org/GettingStarted?ref=homebuttons#Introduction
 
+INSERT INTO Stocks (CODE, NAME) VALUES ('002055', '得润电子')
 
 
 --最近5个交易日中有三次收负，一次跌停，并且总跌幅大于12个点

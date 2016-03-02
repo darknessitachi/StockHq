@@ -28,7 +28,7 @@ namespace StockHq.WebUI.Controllers
         /// <param name="jtSorting"></param>
         /// <returns></returns>
 
-        public async Task<ActionResult> GetStockHqAsync(int jtStartIndex = 0, int jtPageSize = 20, string jtSorting = "lowend desc,lowdays desc ,lowchg desc")
+        public async Task<ActionResult> GetStockHqAsync(int jtStartIndex = 0, int jtPageSize = 50, string jtSorting = "lowend desc,lowdays desc ,lowchg desc")
         {
             try
             {

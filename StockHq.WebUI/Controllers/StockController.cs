@@ -49,7 +49,7 @@ namespace StockHq.WebUI.Controllers
             */
             foreach (var item in stocks)
             {
-                var lowHq = await string.Format(@"http://hqquery.jrj.com.cn/alxzd.do?sort=day&page=1&size=20&order=desc&isup=0&ids={0}&_dc=1456802790072", item.Code).GetStringAsync();
+                var lowHq = await string.Format(@"http://hqquery.jrj.com.cn/alxzd.do?sort=day&page=1&size=20&order=desc&isup=0&ids={0}&_dc=1456802790072", item.Code).WithTimeout(15).GetStringAsync();
                 var lowHqArrs = lowHq.Remove(0, lowHq.IndexOf('[') + 5).Replace("]\r\n}", "").Replace("{", "").Replace("}", "").Replace(@"\", "").Split(',');
                 if (lowHqArrs.Count() < 10)
                 {
@@ -78,7 +78,7 @@ namespace StockHq.WebUI.Controllers
             foreach (var item in stocks)
             {
                 string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start={1}&end={2}&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Code, DateTime.Now.AddDays(-30).ToString("yyyyMMdd"), DateTime.Now.ToString("yyyyMMdd"));
-                var data = await url.GetStringAsync();
+                var data = await url.WithTimeout(15).GetStringAsync();
                 if (data.Length < 30)
                 {
                     continue;
