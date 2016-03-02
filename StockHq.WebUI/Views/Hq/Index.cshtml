@@ -15,8 +15,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#container').jtable({
-                title: '股票数据分析',
-                paging: true,
+                title: '连续下跌股票数据分析',
+                paging: false,
                 pageSize: 50,
                 sorting: true,
                 defaultSorting: 'lowend desc,lowdays desc ,lowchg desc',
@@ -67,7 +67,7 @@
                                                 },
                                                 StockId: {
                                                     type: 'hidden',
-                                                    defaultValue: data.record.Id
+                                                    defaultValue: data.record.Id,
                                                 },
                                                 Date: {
                                                     title: '交易时间',
@@ -80,6 +80,7 @@
                                                 },
                                                 Lowest: {
                                                     title: '最低价',
+                                                    edit: false,
                                                 },
                                                 Chg: {
                                                     title: '涨跌幅',
@@ -110,6 +111,16 @@
                     },
                     Name: {
                         title: '证券简称',
+                        display: function (data) {
+                            if (data.record.Lowchg == 0) {
+                                return '<b>' + data.record.Name + '</b>';
+                            }
+                            else if (data.record.Lowchg >= 0) {
+                                return '<b style="color:red">' + data.record.Name + '</b>';
+                            } else {
+                                return '<b style="color:green">' + data.record.Name + '</b>';
+                            }
+                        }
                     },
                     Lowbegin: {
                         title: '下跌日期',

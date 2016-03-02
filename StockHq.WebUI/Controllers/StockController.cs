@@ -57,7 +57,7 @@ namespace StockHq.WebUI.Controllers
                 }
                 await new SqlConnection(DBSetting.StockHq).ExecuteAsync("UPDATE Stocks SET lowdays= @lowdays ,lowchg=@lowchg ,lowclose=@lowclose,lowrate=@lowrate,lowvolume=@lowvolume,lowturnover=@lowturnover,lowbegin=@lowbegin,lowend=@lowend WHERE code=@code", new
                 {
-                    lowdays = decimal.Parse(lowHqArrs[6].Split(':')[1]),
+                    lowdays = int.Parse(lowHqArrs[6].Split(':')[1]),
                     lowchg = decimal.Parse(lowHqArrs[3].Split(':')[1]),
                     lowclose = decimal.Parse(lowHqArrs[2].Split(':')[1]),
                     lowrate = decimal.Parse(lowHqArrs[5].Split(':')[1]),
@@ -67,6 +67,31 @@ namespace StockHq.WebUI.Controllers
                     lowend = lowHqArrs[10].Split(':')[1],
                     code = item.Code
                 });
+            }
+            #endregion
+
+            #region  获取连续上涨天数
+            foreach (var item in stocks)
+            {
+                var lowHq = await string.Format(@"http://hqquery.jrj.com.cn/alxzd.do?sort=day&page=1&size=20&order=desc&isup=1&ids={0}&_dc=1456904310757", item.Code).WithTimeout(15).GetStringAsync();
+                var lowHqArrs = lowHq.Remove(0, lowHq.IndexOf('[') + 5).Replace("]\r\n}", "").Replace("{", "").Replace("}", "").Replace(@"\", "").Split(',');
+                if (lowHqArrs.Count() < 10)
+                {
+                    continue;
+                }
+                /*
+                await new SqlConnection(DBSetting.StockHq).ExecuteAsync("UPDATE Stocks SET lowdays= @lowdays ,lowchg=@lowchg ,lowclose=@lowclose,lowrate=@lowrate,lowvolume=@lowvolume,lowturnover=@lowturnover,lowbegin=@lowbegin,lowend=@lowend WHERE code=@code", new
+                {
+                    lowdays = int.Parse(lowHqArrs[6].Split(':')[1]),
+                    lowchg = decimal.Parse(lowHqArrs[3].Split(':')[1]),
+                    lowclose = decimal.Parse(lowHqArrs[2].Split(':')[1]),
+                    lowrate = decimal.Parse(lowHqArrs[5].Split(':')[1]),
+                    lowvolume = int.Parse(lowHqArrs[4].Split(':')[1]),
+                    lowturnover = decimal.Parse(lowHqArrs[7].Split(':')[1]),
+                    lowbegin = lowHqArrs[9].Split(':')[1],
+                    lowend = lowHqArrs[10].Split(':')[1],
+                    code = item.Code
+                });*/
             }
             #endregion
 

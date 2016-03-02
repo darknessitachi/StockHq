@@ -42,8 +42,8 @@ namespace StockHq.WebUI.Controllers
                       jtSorting = jtSorting
                   }).ContinueWith(t => t.Result.ToList());
                  */
-                string cmdText = @"SELECT * FROM(SELECT ROW_NUMBER() OVER (ORDER BY " + jtSorting + @") AS Num, * FROM Stocks) AS A
-                                   WHERE Num > @beginSize AND Num <= @endSize";
+                string cmdText = @"SELECT * FROM(SELECT ROW_NUMBER() OVER (ORDER BY " + jtSorting + @") AS Num, * FROM Stocks) AS A";
+                // WHERE Num > @beginSize AND Num <= @endSize";
                 var stocks = await new SqlConnection(DBSetting.StockHq).QueryAsync<Stocks>(cmdText, new
                 {
                     beginSize = jtStartIndex,
