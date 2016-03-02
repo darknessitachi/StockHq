@@ -42,12 +42,14 @@ namespace StockHq.WebUI.Controllers
                       jtSorting = jtSorting
                   }).ContinueWith(t => t.Result.ToList());
                  */
-                string cmdText = @"SELECT * FROM(SELECT ROW_NUMBER() OVER (ORDER BY " + jtSorting + @") AS Num, * FROM Stocks) AS A";
-                // WHERE Num > @beginSize AND Num <= @endSize";
+                string cmdText = @"SELECT B.[NearDate],b.stockid,A.* FROM(SELECT ROW_NUMBER() OVER(ORDER BY " + jtSorting + @") AS Num, * FROM Stocks) AS A
+                                   INNER JOIN(SELECT DISTINCT stockid, MAX([date]) AS NearDate FROM StockHq
+                                   GROUP BY  stockid) AS B ON A.ID=B.stockid WHERE Num > @beginSize AND Num <= @endSize ORDER BY " + jtSorting;
                 var stocks = await new SqlConnection(DBSetting.StockHq).QueryAsync<Stocks>(cmdText, new
                 {
                     beginSize = jtStartIndex,
                     endSize = jtStartIndex + jtPageSize,
+                    jtSorting = jtSorting
                 }).ContinueWith(t => t.Result.ToList());
                 if (stocks == null)
                 {

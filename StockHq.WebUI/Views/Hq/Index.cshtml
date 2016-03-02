@@ -19,8 +19,8 @@
                 paging: false,
                 pageSize: 50,
                 sorting: true,
-                defaultSorting: 'lowend desc,lowdays desc ,lowchg desc',
-                //openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
+                defaultSorting: 'Lowend DESC,Lowdays DESC ,Lowchg DESC',
+                openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
                 actions: {
                     listAction: '/Hq/GetStockHqAsync',
                     createAction: '/GettingStarted/CreatePerson',
@@ -37,8 +37,8 @@
                         width: '2%'
                     },
                     Exams: {
-                        title: '',
-                        width: '2%',
+                        title: '详情',
+                        width: '5%',
                         sorting: false,
                         edit: false,
                         create: false,
@@ -108,6 +108,7 @@
                     },
                     Code: {
                         title: '证券代码',
+                        width: '7%',
                     },
                     Name: {
                         title: '证券简称',
@@ -115,9 +116,9 @@
                             if (data.record.Lowchg > 0) {
                                 return '<b style="color:red">' + data.record.Name + '</b>';
                             }
-                            else if (data.record.Lowchg < 0 && data.record.Lowdays >= 3) {
+                            else if (data.record.Lowchg < 0 && data.record.Lowdays > 3 && data.record.NearDate == data.record.Lowend) {
                                 //连跌3天并且是最后一个交易日也收跌
-                                return '<b style="color:green">' + data.record.Name + '</b>';
+                                return '<b style="color:green">' + data.record.Name + '</b><b style="color:red">（买）</p>'
                             }
                             else {
                                 return '<b>' + data.record.Name + '</b>';
@@ -129,6 +130,15 @@
                     },
                     Lowend: {
                         title: '止跌日期',
+                        display: function (data) {
+                            if (data.record.NearDate == data.record.Lowend) {
+                                //最后一个交易日收跌
+                                return '<b style="color:green">' + data.record.Lowend + '</b><b style="color:green">（续跌）</p>';
+                            }
+                            else {
+                                return '<b>' + data.record.Lowend + '</b>';
+                            }
+                        }
                     },
                     Lowdays: {
                         title: '下跌天数',
@@ -160,11 +170,172 @@
                 }
             });
             $('#container').jtable('load');
+            @*---------------------------------*@
+            $('#highcontainer').jtable({
+                title: '连续上涨股票数据分析',
+                paging: false,
+                pageSize: 50,
+                sorting: true, //Enable sorting
+                defaultSorting: 'Highend DESC,Highdays DESC ,Highchg DESC', //Set default sorting
+                openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
+                actions: {
+                    listAction: '/Hq/GetStockHqAsync',
+                    createAction: '/GettingStarted/CreatePerson',
+                    updateAction: '/GettingStarted/UpdatePerson',
+                    deleteAction: '/GettingStarted/DeletePerson'
+                },
+                fields: {
+                    Id: {
+                        title: '序号',
+                        key: true,
+                        create: false,
+                        edit: false,
+                        list: false,
+                        width: '2%'
+                    },
+                    Exams: {
+                        title: '详情',
+                        width: '5%',
+                        sorting: false,
+                        edit: false,
+                        create: false,
+                        display: function (data) {
+                            //Create an image that will be used to open child table
+                            var $img = $('<img src="/Content/images/more.png" title="日交易详情（最近10个交易日）" />');
+                            //Open child table when user clicks the image
+                            $img.click(function () {
+                                $('#highcontainer').jtable('openChildTable',
+                                        $img.closest('tr'), //Parent row
+                                        {
+                                            title: data.record.Name + ' - 日交易详情（最近10个交易日）',
+                                            actions: {
+                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id,
+                                                deleteAction: '/Demo/DeleteExam',
+                                                updateAction: '/Demo/UpdateExam',
+                                                createAction: '/Demo/CreateExam'
+                                            },
+                                            fields: {
+                                                Id: {
+                                                    title: '序号',
+                                                    key: true,
+                                                    create: false,
+                                                    edit: false,
+                                                    list: false
+                                                },
+                                                StockId: {
+                                                    type: 'hidden',
+                                                    defaultValue: data.record.Id,
+                                                },
+                                                Date: {
+                                                    title: '交易时间',
+                                                },
+                                                Open: {
+                                                    title: '开盘价',
+                                                },
+                                                Highest: {
+                                                    title: '最高价',
+                                                },
+                                                Lowest: {
+                                                    title: '最低价',
+                                                    edit: false,
+                                                },
+                                                Chg: {
+                                                    title: '涨跌幅',
+                                                },
+                                                Change: {
+                                                    title: '涨跌额',
+                                                },
+                                                Volume: {
+                                                    title: '成交量(手)',
+                                                },
+                                                Turnover: {
+                                                    title: '成交金额(万)',
+                                                },
+                                                Rate: {
+                                                    title: '换手率',
+                                                }
+                                            }
+                                        }, function (data) {
+                                            data.childTable.jtable('load');
+                                        });
+                            });
+                            //Return image to show on the person row
+                            return $img;
+                        }
+                    },
+                    Code: {
+                        title: '证券代码',
+                        width: '7%',
+                    },
+                    Name: {
+                        title: '证券简称',
+                        display: function (data) {
+                            if (data.record.Lowend == data.record.NearDate) {
+                                return '<b style="color:green">' + data.record.Name + '</b><b style="color:green">（跌）</p>'
+                            }
+                            else if (data.record.Highdays > 0 && data.record.NearDate == data.record.Highend && data.record.Lowdays > 2) {
+                                //之前连跌3天
+                                return '<b style="color:red">' + data.record.Name + '</b><b style="color:red">（买）</p>'
+                            }
+                            else if (data.record.Lowend != data.record.NearDate && data.record.Highdays <= 1) {
+                                return '<b style="color:red">' + data.record.Name + '</b><b style="color:red">（首涨）</p>'
+                            }
+                            else {
+                                return '<b>' + data.record.Name + '</b>';
+                            }
+                        }
+                    },
+                    Highbegin: {
+                        title: '上涨日期',
+                        display: function (data) {
+                            if (data.record.Lowend != data.record.NearDate && data.record.Highdays == 0) {
+                                return data.record.NearDate;
+                            }
+                            else {
+                                return data.record.Highbegin;
+                            }
+                        }
+                    },
+                    Highend: {
+                        title: '止涨日期',
+                        display: function (data) {
+                            if (data.record.NearDate == data.record.Highend && data.record.Highdays > 1) {
+                                //最后一个交易日收涨
+                                return '<b style="color:red">' + data.record.Highend + '</b><b style="color:red">（续涨）</p>';
+                            }
+                            else {
+                                return '<b>' + data.record.Highend + '</b>';
+                            }
+                        }
+                    },
+                    Highdays: {
+                        title: '上涨天数',
+                    },
+                    Highchg: {
+                        title: '涨跌幅',
+                    },
+                    Highclose: {
+                        title: '收盘价',
+                    },
+                    Highrate: {
+                        title: '换手率',
+                    },
+                    Highvolume: {
+                        title: '成交量(手)',
+                    },
+                    Highturnover: {
+                        title: '阶段涨跌额',
+                    }
+                }
+            });
+            $('#highcontainer').jtable('load');
         });
     </script>
 </head>
 <body>
     <!--连续下跌股票数据分析-->
-    <div id="container" />
+    <div id="container"></div>
+    <!--连续上涨股票数据分析-->
+    <div id="highcontainer" style="margin-top:20px"></div>
 </body>
 </html>

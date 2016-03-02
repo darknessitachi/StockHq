@@ -73,25 +73,24 @@ namespace StockHq.WebUI.Controllers
             #region  获取连续上涨天数
             foreach (var item in stocks)
             {
-                var lowHq = await string.Format(@"http://hqquery.jrj.com.cn/alxzd.do?sort=day&page=1&size=20&order=desc&isup=1&ids={0}&_dc=1456904310757", item.Code).WithTimeout(15).GetStringAsync();
-                var lowHqArrs = lowHq.Remove(0, lowHq.IndexOf('[') + 5).Replace("]\r\n}", "").Replace("{", "").Replace("}", "").Replace(@"\", "").Split(',');
-                if (lowHqArrs.Count() < 10)
+                var highHq = await string.Format(@"http://hqquery.jrj.com.cn/alxzd.do?sort=day&page=1&size=20&order=desc&isup=1&ids={0}&_dc=1456904310757", item.Code).WithTimeout(15).GetStringAsync();
+                var highHqArrs = highHq.Remove(0, highHq.IndexOf('[') + 5).Replace("]\r\n}", "").Replace("{", "").Replace("}", "").Replace(@"\", "").Split(',');
+                if (highHqArrs.Count() < 10)
                 {
                     continue;
                 }
-                /*
-                await new SqlConnection(DBSetting.StockHq).ExecuteAsync("UPDATE Stocks SET lowdays= @lowdays ,lowchg=@lowchg ,lowclose=@lowclose,lowrate=@lowrate,lowvolume=@lowvolume,lowturnover=@lowturnover,lowbegin=@lowbegin,lowend=@lowend WHERE code=@code", new
+                await new SqlConnection(DBSetting.StockHq).ExecuteAsync("UPDATE Stocks SET highdays= @highdays ,highchg=@highchg ,highclose=@highclose,highrate=@highrate,highvolume=@highvolume,highturnover=@highturnover,highbegin=@highbegin,highend=@highend WHERE code=@code", new
                 {
-                    lowdays = int.Parse(lowHqArrs[6].Split(':')[1]),
-                    lowchg = decimal.Parse(lowHqArrs[3].Split(':')[1]),
-                    lowclose = decimal.Parse(lowHqArrs[2].Split(':')[1]),
-                    lowrate = decimal.Parse(lowHqArrs[5].Split(':')[1]),
-                    lowvolume = int.Parse(lowHqArrs[4].Split(':')[1]),
-                    lowturnover = decimal.Parse(lowHqArrs[7].Split(':')[1]),
-                    lowbegin = lowHqArrs[9].Split(':')[1],
-                    lowend = lowHqArrs[10].Split(':')[1],
+                    highdays = int.Parse(highHqArrs[6].Split(':')[1]),
+                    highchg = decimal.Parse(highHqArrs[3].Split(':')[1]),
+                    highclose = decimal.Parse(highHqArrs[2].Split(':')[1]),
+                    highrate = decimal.Parse(highHqArrs[5].Split(':')[1]),
+                    highvolume = int.Parse(highHqArrs[4].Split(':')[1]),
+                    highturnover = decimal.Parse(highHqArrs[7].Split(':')[1]),
+                    highbegin = highHqArrs[9].Split(':')[1],
+                    highend = highHqArrs[10].Split(':')[1],
                     code = item.Code
-                });*/
+                });
             }
             #endregion
 

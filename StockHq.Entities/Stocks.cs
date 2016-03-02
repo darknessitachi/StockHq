@@ -55,5 +55,45 @@ namespace StockHq.Entities
         /// 下跌结束时间
         /// </summary>
         public string Lowend { get; set; }
+
+
+        /// <summary>
+        /// 上涨天数
+        /// </summary>
+        public int Highdays { get; set; }
+        /// <summary>
+        /// 涨跌幅
+        /// </summary>
+        public decimal Highchg { get; set; }
+        /// <summary>
+        /// 收盘价
+        /// </summary>
+        public decimal Highclose { get; set; }
+        /// <summary>
+        /// 换手率
+        /// </summary>
+        public decimal Highrate { get; set; }
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public int Highvolume { get; set; }
+        /// <summary>
+        /// 阶段涨跌额
+        /// </summary>
+        public decimal Highturnover { get; set; }
+        /// <summary>
+        /// 上涨开始时间
+        /// </summary>
+        public string Highbegin { get; set; }
+        /// <summary>
+        /// 上涨结束时间
+        /// </summary>
+        public string Highend { get; set; }
+
+
+        /// <summary>
+        /// 最近一个交易日的时间
+        /// </summary>
+        public string NearDate { get; set; }
     }
 }
