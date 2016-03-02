@@ -1,4 +1,9 @@
-﻿
+﻿未开发计划
+1.连续上涨天数
+2.按周统计
+3.所属板块
+
+
 
 INSERT INTO Stocks (CODE, NAME) VALUES ('得润电子', '002055')
 
