@@ -84,6 +84,14 @@
                                                 },
                                                 Chg: {
                                                     title: '涨跌幅',
+                                                    display: function (data) {
+                                                        if (data.record.Chg > -5) {
+                                                            return '<b style="color:red">' + data.record.Chg + '</b>';
+                                                        }
+                                                        else {
+                                                            return data.record.Chg;
+                                                        }
+                                                    },
                                                 },
                                                 Change: {
                                                     title: '涨跌额',
@@ -126,7 +134,8 @@
                         },
                     },
                     Lowclose: {
-                        title: '收盘价',
+                        title: '收盘价(元)',
+                        width: '5%',
                     },
                     Lowbegin: {
                         title: '下跌日期',
@@ -286,7 +295,8 @@
                         },
                     },
                     Highclose: {
-                        title: '收盘价',
+                        title: '收盘价(元)',
+                        width: '5%',
                     },
                     Highbegin: {
                         title: '上涨日期',
