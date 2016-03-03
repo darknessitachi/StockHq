@@ -85,12 +85,7 @@
                                                 Chg: {
                                                     title: '涨跌幅',
                                                     display: function (data) {
-                                                        if (data.record.Chg > -5) {
-                                                            return '<b style="color:red">' + data.record.Chg + '</b>';
-                                                        }
-                                                        else {
-                                                            return data.record.Chg;
-                                                        }
+                                                        return data.record.Chg;
                                                     },
                                                 },
                                                 Change: {
@@ -286,9 +281,9 @@
                                 //之前连跌3天
                                 return '<b style="color:red">' + data.record.Name + '</b><b style="color:red">（买）</p>'
                             }
-                            else if (data.record.Lowend != data.record.NearDate && data.record.Highdays <= 1) {
+                                @*  else if (data.record.Lowend != data.record.NearDate && data.record.Highdays <= 1) {
                                 return '<b style="color:red">' + data.record.Name + '</b><b style="color:red">（首涨）</p>'
-                            }
+                            }*@
                             else {
                                 return '<b>' + data.record.Name + '</b>';
                             }
@@ -301,12 +296,7 @@
                     Highbegin: {
                         title: '上涨日期',
                         display: function (data) {
-                            if (data.record.Lowend != data.record.NearDate && data.record.Highdays == 0) {
-                                return data.record.NearDate;
-                            }
-                            else {
-                                return data.record.Highbegin;
-                            }
+                            return data.record.Highbegin;
                         }
                     },
                     Highend: {
