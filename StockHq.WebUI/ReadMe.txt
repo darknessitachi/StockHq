@@ -6,11 +6,14 @@
 
 
 http://hangfire.io/
+https://github.com/aspnetboilerplate/aspnetboilerplate
 
+
+http://www.aspnetboilerplate.com/Pages/Documents/Hangfire-Integration
 http://www.jtable.org/GettingStarted?ref=homebuttons#Introduction
 
-INSERT INTO Stocks (CODE, NAME) VALUES ('002055', '得润电子')
 
+INSERT INTO Stocks (CODE, NAME) VALUES ('002055', '得润电子')
 
 --最近5个交易日中有三次收负，一次跌停，并且总跌幅大于12个点
 
