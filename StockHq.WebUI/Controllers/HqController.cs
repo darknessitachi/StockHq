@@ -9,16 +9,21 @@ using System.Web;
 using System.Web.Mvc;
 using Dapper;
 
-
 namespace StockHq.WebUI.Controllers
 {
+    /// <summary>
+    /// 行情数据
+    /// </summary>
     public class HqController : Controller
     {
+        /// <summary>
+        /// 首页
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             return View();
         }
-
 
         /// <summary>
         /// 获得数据
