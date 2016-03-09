@@ -103,7 +103,7 @@ namespace StockHq.WebUI.Controllers
                 var executeNum = await new SqlConnection(DBSetting.StockHq).ExecuteAsync(@"DELETE FROM StockHq");
                 #endregion
 
-                #region 获得历史交易数据
+                #region 获得历史交易数据 [按日]
                 foreach (var item in stocks)
                 {
                     string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start={1}&end={2}&stat=1&order=D&period=d&callback=historySearchHandler&rt=jsonp", item.Code, DateTime.Now.AddDays(-30).ToString("yyyyMMdd"), DateTime.Now.ToString("yyyyMMdd"));
