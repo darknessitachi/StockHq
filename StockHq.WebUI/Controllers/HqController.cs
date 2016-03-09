@@ -33,7 +33,7 @@ namespace StockHq.WebUI.Controllers
         /// <param name="jtSorting"></param>
         /// <returns></returns>
 
-        public async Task<ActionResult> GetStockHqAsync(int jtStartIndex = 0, int jtPageSize = 50, string jtSorting = "lowend desc,lowdays desc ,lowchg desc")
+        public async Task<ActionResult> GetStockHqAsync(int jtStartIndex = 0, int jtPageSize = 3000, string jtSorting = "lowend desc,lowdays desc ,lowchg desc")
         {
             try
             {
@@ -74,14 +74,15 @@ namespace StockHq.WebUI.Controllers
         /// <param name="stockId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> GetStockHqDetailAsync(int stockId)
+        public async Task<ActionResult> GetStockHqDetailAsync(int stockId, string type = "day")
         {
             try
             {
-                string cmdText = @"SELECT TOP 10 * FROM StockHq WHERE StockId=@StockId ORDER BY [DATE] DESC";
+                string cmdText = @"SELECT TOP 10 * FROM StockHq WHERE StockId=@StockId AND [type]=@type ORDER BY [DATE] DESC";
                 var stockHq = await new SqlConnection(DBSetting.StockHq).QueryAsync<StockHq.Entities.StockHq>(cmdText, new
                 {
-                    StockId = stockId
+                    StockId = stockId,
+                    type = type
                 }).ContinueWith(t => t.Result.ToList());
                 if (stockHq == null)
                 {

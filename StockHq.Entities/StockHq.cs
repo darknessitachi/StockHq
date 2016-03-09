@@ -61,5 +61,10 @@ namespace StockHq.Entities
         /// 换手率
         /// </summary>
         public decimal Rate { get; set; }
+
+        /// <summary>
+        /// 类型 【day week month】
+        /// </summary>
+        public string Type { get; set; }
     }
 }

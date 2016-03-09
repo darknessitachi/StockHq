@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>股票数据分析</title>
+    <title>数据分析</title>
     <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
     <link href="~/Scripts/jtable/themes/lightcolor/blue/jtable.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-2.2.1.js"></script>
@@ -44,7 +44,7 @@
                         create: false,
                         display: function (data) {
                             //Create an image that will be used to open child table
-                            var $img = $('<img src="/Content/images/more.png" title="日交易详情（最近10个交易日）" />');
+                            var $img = $('<img src="/Content/images/day.png" title="日交易详情（最近10个交易日）" />');
                             //Open child table when user clicks the image
                             $img.click(function () {
                                 $('#container').jtable('openChildTable',
@@ -52,7 +52,7 @@
                                         {
                                             title: data.record.Name + ' - 日交易详情（最近10个交易日）',
                                             actions: {
-                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id,
+                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id + "&type=day",
                                                 deleteAction: '/Demo/DeleteExam',
                                                 updateAction: '/Demo/UpdateExam',
                                                 createAction: '/Demo/CreateExam'
@@ -109,12 +109,83 @@
                             return $img;
                         }
                     },
+                    Weeks: {
+                        title: '周详情',
+                        width: '4%',
+                        sorting: false,
+                        edit: false,
+                        create: false,
+                        display: function (data) {
+                            //Create an image that will be used to open child table
+                            var $img = $('<img src="/Content/images/week.png" title="周交易详情（最近10周交易日）" />');
+                            //Open child table when user clicks the image
+                            $img.click(function () {
+                                $('#highcontainer').jtable('openChildTable',
+                                        $img.closest('tr'), //Parent row
+                                        {
+                                            title: data.record.Name + ' - 周交易详情（最近10周交易日）',
+                                            actions: {
+                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id + "&type=week",
+                                                deleteAction: '/Demo/DeleteExam',
+                                                updateAction: '/Demo/UpdateExam',
+                                                createAction: '/Demo/CreateExam'
+                                            },
+                                            fields: {
+                                                Id: {
+                                                    title: '序号',
+                                                    key: true,
+                                                    create: false,
+                                                    edit: false,
+                                                    list: false
+                                                },
+                                                StockId: {
+                                                    type: 'hidden',
+                                                    defaultValue: data.record.Id,
+                                                },
+                                                Date: {
+                                                    title: '交易时间',
+                                                },
+                                                Open: {
+                                                    title: '开盘价',
+                                                },
+                                                Highest: {
+                                                    title: '最高价',
+                                                },
+                                                Lowest: {
+                                                    title: '最低价',
+                                                    edit: false,
+                                                },
+                                                Chg: {
+                                                    title: '涨跌幅',
+                                                },
+                                                Change: {
+                                                    title: '涨跌额',
+                                                },
+                                                Volume: {
+                                                    title: '成交量(手)',
+                                                },
+                                                Turnover: {
+                                                    title: '成交金额(万)',
+                                                },
+                                                Rate: {
+                                                    title: '换手率',
+                                                }
+                                            }
+                                        }, function (data) {
+                                            data.childTable.jtable('load');
+                                        });
+                            });
+                            //Return image to show on the person row
+                            return $img;
+                        }
+                    },
                     Code: {
                         title: '证券代码',
                         width: '7%',
                     },
                     Name: {
                         title: '证券简称',
+                        width: '7%',
                         display: function (data) {
                             if (data.record.Lowchg > 0) {
                                 return '<b style="color:red">' + data.record.Name + '</b>';
@@ -198,8 +269,8 @@
                         width: '2%'
                     },
                     Days: {
-                        title: '日详情',
-                        width: '4%',
+                        title: '详情详情',
+                        width: '5%',
                         sorting: false,
                         edit: false,
                         create: false,
@@ -213,7 +284,7 @@
                                         {
                                             title: data.record.Name + ' - 日交易详情（最近10个交易日）',
                                             actions: {
-                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id,
+                                                listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id + "&type=day",
                                                 deleteAction: '/Demo/DeleteExam',
                                                 updateAction: '/Demo/UpdateExam',
                                                 createAction: '/Demo/CreateExam'

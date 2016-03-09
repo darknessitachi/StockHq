@@ -132,7 +132,43 @@ namespace StockHq.WebUI.Controllers
                             Chg = decimal.Parse(stock[0].Hq[j][4]),
                             Rate = decimal.Parse(stock[0].Hq[j][9]),
                             Volume = int.Parse(stock[0].Hq[j][7]),
-                            Turnover = decimal.Parse(stock[0].Hq[j][8])
+                            Turnover = decimal.Parse(stock[0].Hq[j][8]),
+                            Type = "day"
+                        });
+                    }
+                }
+                #endregion
+
+                #region 获得历史交易数据 [按周]
+                foreach (var item in stocks)
+                {
+                    string url = string.Format(@"http://q.stock.sohu.com/hisHq?code=cn_{0}&start={1}&end={2}&stat=1&order=D&period=w&callback=historySearchHandler&rt=jsonp&r=0.6330537682505002&0.07230534508623476", item.Code, DateTime.Now.AddDays(-90).ToString("yyyyMMdd"), DateTime.Now.ToString("yyyyMMdd"));
+                    var data = await url.WithTimeout(15).GetStringAsync();
+                    if (data.Length < 30)
+                    {
+                        continue;
+                    }
+                    var stock = JsonConvert.DeserializeObject<List<HisStockHq>>(data.Replace(@"historySearchHandler(", "").Replace(")", "").Replace("%", ""));
+                    if (stock.Count() < 0 || stock[0].Status != 0)
+                    {
+                        continue;
+                    }
+                    for (int j = 0; j < stock[0].Hq.Count(); j++)
+                    {
+                        await new SqlConnection(DBSetting.StockHq).InsertAsync(new StockHq.Entities.StockHq
+                        {
+                            StockId = item.Id,
+                            Date = stock[0].Hq[j][0].ToString(),
+                            Open = decimal.Parse(stock[0].Hq[j][1]),
+                            Close = decimal.Parse(stock[0].Hq[j][2]),
+                            Highest = decimal.Parse(stock[0].Hq[j][6]),
+                            Lowest = decimal.Parse(stock[0].Hq[j][5]),
+                            Change = decimal.Parse(stock[0].Hq[j][3]),
+                            Chg = decimal.Parse(stock[0].Hq[j][4]),
+                            Rate = decimal.Parse(stock[0].Hq[j][9]),
+                            Volume = int.Parse(stock[0].Hq[j][7]),
+                            Turnover = decimal.Parse(stock[0].Hq[j][8]),
+                            Type = "week"
                         });
                     }
                 }
