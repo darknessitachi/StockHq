@@ -190,8 +190,8 @@
                             if (data.record.Lowchg > 0) {
                                 return '<b style="color:red">' + data.record.Name + '</b>';
                             }
-                            else if (data.record.Lowchg < 0 && data.record.Lowdays > 3 && data.record.NearDate == data.record.Lowend) {
-                                //连跌3天并且是最后一个交易日也收跌
+                            else if (data.record.Lowchg < -12 && data.record.Lowdays > 2 && data.record.NearDate == data.record.Lowend) {
+                                //连跌3天跌幅大于12个点并且是最后一个交易日也收跌
                                 return '<b style="color:green">' + data.record.Name + '</b><b style="color:red">（买）</p>'
                             }
                             else {
