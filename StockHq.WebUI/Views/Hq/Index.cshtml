@@ -24,8 +24,8 @@
                 actions: {
                     listAction: '/Hq/GetStockHqAsync',
                     createAction: '/GettingStarted/CreatePerson',
-                    updateAction: '/GettingStarted/UpdatePerson',
-                    deleteAction: '/GettingStarted/DeletePerson'
+                    //updateAction: '/GettingStarted/UpdatePerson',
+                    //deleteAction: '/GettingStarted/DeletePerson'
                 },
                 fields: {
                     Id: {
@@ -37,7 +37,7 @@
                         width: '2%'
                     },
                     Days: {
-                        title: '日详情',
+                        title: '日交易',
                         width: '4%',
                         sorting: false,
                         edit: false,
@@ -53,9 +53,9 @@
                                             title: data.record.Name + ' - 日交易详情（最近10个交易日）',
                                             actions: {
                                                 listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id + "&type=day",
-                                                deleteAction: '/Demo/DeleteExam',
-                                                updateAction: '/Demo/UpdateExam',
-                                                createAction: '/Demo/CreateExam'
+                                                //deleteAction: '/Demo/DeleteExam',
+                                                //updateAction: '/Demo/UpdateExam',
+                                                //createAction: '/Demo/CreateExam'
                                             },
                                             fields: {
                                                 Id: {
@@ -110,7 +110,7 @@
                         }
                     },
                     Weeks: {
-                        title: '周详情',
+                        title: '周交易',
                         width: '4%',
                         sorting: false,
                         edit: false,
@@ -126,9 +126,9 @@
                                             title: data.record.Name + ' - 周交易详情（最近10周交易日）',
                                             actions: {
                                                 listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id + "&type=week",
-                                                deleteAction: '/Demo/DeleteExam',
-                                                updateAction: '/Demo/UpdateExam',
-                                                createAction: '/Demo/CreateExam'
+                                                //deleteAction: '/Demo/DeleteExam',
+                                                //updateAction: '/Demo/UpdateExam',
+                                                //createAction: '/Demo/CreateExam'
                                             },
                                             fields: {
                                                 Id: {
@@ -185,7 +185,6 @@
                     },
                     Name: {
                         title: '证券简称',
-                        width: '7%',
                         display: function (data) {
                             if (data.record.Lowchg > 0) {
                                 return '<b style="color:red">' + data.record.Name + '</b>';
@@ -201,13 +200,15 @@
                     },
                     Lowclose: {
                         title: '收盘价(元)',
-                        width: '5%',
+                        create: false,
                     },
                     Lowbegin: {
                         title: '下跌日期',
+                        create: false,
                     },
                     Lowend: {
                         title: '止跌日期',
+                        create: false,
                         display: function (data) {
                             if (data.record.NearDate == data.record.Lowend) {
                                 //最后一个交易日收跌
@@ -220,18 +221,24 @@
                     },
                     Lowdays: {
                         title: '下跌天数',
+                        create: false,
                     },
                     Lowchg: {
                         title: '涨跌幅',
+                        create: false,
                     },
                     Lowrate: {
                         title: '换手率',
+                        create: false,
+                        width: '7%',
                     },
                     Lowvolume: {
                         title: '成交量(手)',
+                        create: false,
                     },
                     Lowturnover: {
                         title: '阶段涨跌额',
+                        create: false,
                     }
                     //    RecordDate: {
                     //    title: 'Record date',
@@ -255,9 +262,9 @@
                 openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
                 actions: {
                     listAction: '/Hq/GetStockHqAsync',
-                    createAction: '/GettingStarted/CreatePerson',
-                    updateAction: '/GettingStarted/UpdatePerson',
-                    deleteAction: '/GettingStarted/DeletePerson'
+                    //createAction: '/GettingStarted/CreatePerson',
+                    //updateAction: '/GettingStarted/UpdatePerson',
+                    //deleteAction: '/GettingStarted/DeletePerson'
                 },
                 fields: {
                     Id: {
@@ -266,10 +273,9 @@
                         create: false,
                         edit: false,
                         list: false,
-                        width: '2%'
                     },
                     Days: {
-                        title: '详情详情',
+                        title: '交易详情',
                         width: '5%',
                         sorting: false,
                         edit: false,
@@ -285,9 +291,9 @@
                                             title: data.record.Name + ' - 日交易详情（最近10个交易日）',
                                             actions: {
                                                 listAction: '/Hq/GetStockHqDetailAsync?stockId=' + data.record.Id + "&type=day",
-                                                deleteAction: '/Demo/DeleteExam',
-                                                updateAction: '/Demo/UpdateExam',
-                                                createAction: '/Demo/CreateExam'
+                                                //deleteAction: '/Demo/DeleteExam',
+                                                //updateAction: '/Demo/UpdateExam',
+                                                //createAction: '/Demo/CreateExam'
                                             },
                                             fields: {
                                                 Id: {
@@ -340,7 +346,6 @@
                     },
                     Code: {
                         title: '证券代码',
-                        width: '7%',
                     },
                     Name: {
                         title: '证券简称',
@@ -362,7 +367,6 @@
                     },
                     Highclose: {
                         title: '收盘价(元)',
-                        width: '5%',
                     },
                     Highbegin: {
                         title: '上涨日期',
@@ -396,7 +400,6 @@
                     },
                     Highturnover: {
                         title: '阶段涨跌额',
-                        width: '5%'
                     }
                 }
             });
