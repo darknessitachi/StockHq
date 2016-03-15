@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TdxHqStock
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -15,31 +16,39 @@ namespace TdxHqStock
             //必须把TdxHqApi.dll复制到Debug和Release工程目录下;
             //无论用什么语言编程，都必须仔细阅读VC版内的关于DLL导出函数的功能和参数含义说明，不仔细阅读完就提出问题者因时间精力所限，恕不解答。
 
+            Log.Logger = new LoggerConfiguration()
+                            .WriteTo.ColoredConsole()
+                            .MinimumLevel.Debug()
+                            .CreateLogger();
+
             var Result = new StringBuilder(1024 * 1024);
             var ErrInfo = new StringBuilder(256);
 
             bool bool1 = TdxHq_Connect("218.18.103.38", 7709, Result, ErrInfo);
             if (!bool1)
             {
-                Console.WriteLine(ErrInfo.ToString());
+                Log.Error(ErrInfo.ToString());
                 return;
             }
-            Console.WriteLine(Result.ToString());
-
+            Log.Debug(Result.ToString());
             byte[] Market = { 0, 1, 1, 0 };
-            string[] Zqdm = { "000001", "600030", "600000", "000750" };
-            short Count = 4;
+            // string[] Zqdm = { "000001", "600030", "600000", "000750" };
+            // short Count = 4;
+            Log.Warning("=== 获取五档报价 ===");
+            string[] Zqdm = { "000005" };
+            short Count = short.Parse(Zqdm.Count().ToString());
             bool1 = TdxHq_GetSecurityQuotes(Market, Zqdm, ref Count, Result, ErrInfo);
 
             if (bool1)
             {
-                Console.WriteLine(Result.ToString());
+                Log.Information(Result.ToString());
             }
             else
             {
-                Console.WriteLine(ErrInfo.ToString());
+                Log.Error(ErrInfo.ToString());
             }
             TdxHq_Disconnect();
+            Console.ReadKey();
         }
 
         /// <summary>
