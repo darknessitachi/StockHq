@@ -15,6 +15,9 @@ http://www.jtable.org/GettingStarted?ref=homebuttons#Introduction
 
 INSERT INTO Stocks (CODE, NAME) VALUES ('002055', '得润电子')
 
+--获得上周周交易跌幅排序
+SELECT *FROM Stocks AS A INNER JOIN StockHq AS B ON B.stockid=A.id WHERE B.[date] ='2016-03-18' AND B.[type]='week' order by B.change
+
 --最近5个交易日中有三次收负，一次跌停，并且总跌幅大于12个点
 
 DECLARE @dateTable TABLE (dealdate DATE)
